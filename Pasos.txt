@@ -1,0 +1,122 @@
+CREACIÓN DE UNA APLICACIÓN WEB CON WEBPACK Y MANEJO DE BABEL.
+==================================================================
+
+Partimos de un fichero main.js que ejecuta tres funciones (suma, resta
+y multiplicación) que se encuentran en el archivo funciones.js.
+
+**************************************************************************
+¡Importante! Para evitar un error CSR en desarrollo, es necesario instalar
+XAMPP y meter nuestro proyecto en htdocs. 
+Para ejecutarlo en el navegador: localhost/nombre-carpeta
+**************************************************************************
+
+- Sitio web de webpack: https://webpack.js.org/
+
+* ¿PARA QUÉ SIRVE?:
+  -----------------
+  Webpack es un empaquetador de recursos estáticos para aplicaciones JavaScript. 
+
+  Internamente genera un grafo de dependencia que mapea cada recurso que necesita
+  nuestro proyecto y genera uno o más paquetes en función de su tipo.
+
+* CONCEPTOS:
+  ----------
+
+  - Entry: Indica a Webpack desde dónde debe comenzar a construir
+      internamente su grafo de dependencias (sería el módulo principal).
+  - Output: 
+      Donde va a colocar los paquetes generados y su nombre.
+  - Loaders:
+    Webpack por defecto sólo sabe gestionar archivos Javascript y JSON.
+
+    Permiten que Webpack procese otro tipo de archivos y los convierta en
+    módulos válidos que pueda consumir y añadir al gráfico de dependencia.
+
+    Hay dos propiedades importantes: test (qué archivos deben transformarse)
+    y use (que indica qué cargador debe utilizarse para transformarse).
+
+  - Plugins (complementos): 
+    Realizan otras tareas. Por ejemplo: optimizar paquetes, gestionar assets
+    o inyectar variables de entorno.
+
+  - Mode: Para establecer en development, production o none de cara a que
+    Webpack realice optimizaciones para cada entorno (El valor por defecto
+    es production).
+
+* Instalación y configuración. Pasos.
+  ===================================
+
+  - Tener instalado el entorno de ejecución para Javascript nodeJs
+    (disponible en https://nodejs.org/es/).
+ 
+  - Crear el archivo package.json con el comando npm init -y
+  - Instalamos Webpack y su cli (interprete de comandos):
+    npm install webpack --save-dev
+    npm install webpack-cli --save-dev
+  
+  - Si no creamos un archivo de configuracion para webpack:
+
+    * Crearemos index.html y dentro de la carpeta src un index.js.
+    * Compilamos con npx webpack. Se nos crea una carpeta dist
+      y dentro de esta un fichero main.js.
+    * Podemos mover nuestro index.html a la carpeta dist y enlazar
+      el script de main.js.
+
+  - Si creamos un archivo de configuración (webpack.config.js).
+
+    En este caso ejecutaríamos con npx webpack --config webpack.config.js
+
+    (Se nos creará una carpeta dist, que tiene dentro app.js. Podríamos
+     copiar el index.html a esta carpeta y enlazarle ese archivo)
+
+    Esta carpeta tendría nuestro código enlazado y ejecutable.
+
+  => Podemos configurar algunos scripts útiles en package.json para 
+     optimizar la compilación según el entorno, dentro de "scripts":
+
+    "build": "webpack --mode development",
+    "produccion": "webpack --mode production",
+    "watch": "webpack -w --mode development"
+
+    Ejecutaríamos el build, por ejemplo, con npm run build.
+    (La opción watch nos permite que se realice automáticamente esta generación
+     cada vez que detecta un cambio).
+
+    ==================================================================
+                               BABEL
+    ==================================================================
+
+    Con Babel nos aseguramos la compatibilidad de nuestra aplicacion
+    con navegadores que quizá no tengan implementada algunas de las 
+    funciones que estemos utilizando en nuestro lenguaje favorito.
+
+    Sitio web de Babel: https://babeljs.io/
+
+    Instalación:
+
+    - Instalamos los paquetes necesarios con npm:
+
+    npm install --save-dev babel-loader @babel/core
+
+    - Incluimos estas líneas de código en webpack.config.js:
+
+    module: {
+    rules: [
+      { test: /\.js$/, exclude: /node_modules/, loader: "babel-loader" }
+    ]
+    }  
+
+    - Instalar babelrc para habilitar transformaciones a partir de ES2015:
+    npm install @babel/preset-env --save-dev
+
+    - Crear el archivo .babelrc con el siguiente contenido:
+
+    {
+    "presets": ["@babel/preset-env"]
+    }
+
+    ==================================================================
+                            PARCEL
+    ==================================================================
+    Una alternativa a Webpack es Parcel.
+    Web: https://parceljs.org/
